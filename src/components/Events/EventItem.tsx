@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { EventInfoWrapper } from "../../models/common.model";
 
-export default function EventItem({ event }) {
-  const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+const EventItem: React.FC<EventInfoWrapper | any> = function ({ event }) {
+  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
   return (
     <article className="event-item">
@@ -23,4 +24,6 @@ export default function EventItem({ event }) {
       </div>
     </article>
   );
-}
+};
+
+export default EventItem;

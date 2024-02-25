@@ -10,7 +10,9 @@ import { fetchEvents } from "../../util/http.util.js";
 export default function NewEventsSection() {
   let { data, isPending, isError, error } = useQuery({
     queryKey: ["events"],
-    queryFn: fetchEvents,
+    queryFn: () => fetchEvents(),
+    // staleTime: 5000, // data will be considered state after fetching in this much time (ms)
+    // gcTime: 1000, // fetched data will be cleared from the cache (garbage-collected) after this much time (ms)
   });
 
   let content;
