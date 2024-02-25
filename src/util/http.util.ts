@@ -1,7 +1,13 @@
 import { ResError } from "../models/common.model";
+import httpConstants from "./constants.util";
 
-export async function fetchEvents() {
-  const response = await fetch("http://localhost:3000/events");
+export async function fetchEvents(searchTerm?: string, options?: any) {
+  let url = `${httpConstants.BASE_URL}/events`;
+  if (searchTerm) {
+    url = `${url}?search=${searchTerm}`;
+  }
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     const error = new Error(
