@@ -8,12 +8,20 @@ import EventItem from "./EventItem";
 
 export default function FindEventSection() {
   const searchElement = useRef<HTMLInputElement>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>();
 
-  const { data, isPending, isError, error } = useQuery({
+  const {
+    data,
+    // isPending, // will be true if the enabled condition is false
+    isLoading, // will not be true if enabled condition is false
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["events", { search: searchTerm }],
     queryFn: (opts) => fetchEvents(searchTerm, opts),
+    enabled: searchTerm !== undefined,
   });
+  // NOTE: useQuery hook fires the get function immediately during definition, unlike useMutation
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -32,7 +40,7 @@ export default function FindEventSection() {
     );
   }
 
-  if (isPending) {
+  if (isLoading) {
     content = <LoadingIndicator />;
   }
 
