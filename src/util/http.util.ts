@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { ResError } from "../models/common.model";
+import { FetchEventOptions, ResError } from "../models/common.model";
 import httpConstants from "./constants.util";
 
 export const queryClient = new QueryClient();
@@ -28,6 +28,25 @@ export async function fetchEvents(searchTerm?: string, options?: any) {
   return events;
 }
 
+export async function fetchEvent(options: FetchEventOptions) {
+  const response = await fetch(`http://localhost:3000/events/${options.id}`, {
+    signal: options.signal,
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the event"
+    ) as ResError;
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const { event } = await response.json();
+
+  return event;
+}
+
 export async function createNewEvent(eventData: any) {
   console.log(eventData);
   const response = await fetch(`http://localhost:3000/events`, {
@@ -50,6 +69,23 @@ export async function createNewEvent(eventData: any) {
   const { event } = await response.json();
 
   return event;
+}
+
+export async function deleteEvent(eventId: string | undefined) {
+  const response = await fetch(`http://localhost:3000/events/${eventId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while deleting the event"
+    ) as ResError;
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  return response.json();
 }
 
 export async function fetchSelectableImages(params: {

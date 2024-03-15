@@ -26,3 +26,8 @@ export interface NewEventData {
   time: string;
   location: string;
 }
+
+export interface FetchEventOptions {
+  id: string | undefined;
+  signal: AbortSignal | null | undefined;
+}
