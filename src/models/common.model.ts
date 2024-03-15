@@ -18,3 +18,11 @@ export interface ResError extends Error {
   code?: number;
   info?: ErrorInfo;
 }
+
+export interface NewEventData {
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+}
