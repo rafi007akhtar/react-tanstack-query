@@ -1,19 +1,27 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import ImagePicker from '../ImagePicker.jsx';
+import ImagePicker from "../ImagePicker.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSelectableImages } from "../../util/http.util.js";
+import ErrorBlock from "../UI/ErrorBlock.js";
 
-export default function EventForm({ inputData, onSubmit, children }) {
+export default function EventForm(props: any) {
+  const { inputData, onSubmit, children } = props;
   const [selectedImage, setSelectedImage] = useState(inputData?.image);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["events-images"],
+    queryFn: fetchSelectableImages,
+  });
 
-  function handleSelectImage(image) {
+  function handleSelectImage(image: any) {
     setSelectedImage(image);
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event: Event) {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
+    const formData = new FormData(event.target as HTMLFormElement);
+    const data = Object.fromEntries(formData as unknown as Iterable<any>);
 
     onSubmit({ ...data, image: selectedImage });
   }
@@ -26,16 +34,25 @@ export default function EventForm({ inputData, onSubmit, children }) {
           type="text"
           id="title"
           name="title"
-          defaultValue={inputData?.title ?? ''}
+          defaultValue={inputData?.title ?? ""}
         />
       </p>
 
       <div className="control">
-        <ImagePicker
-          images={[]}
-          onSelect={handleSelectImage}
-          selectedImage={selectedImage}
-        />
+        {isPending && <p>Loading images ...</p>}
+        {data && (
+          <ImagePicker
+            images={data}
+            onSelect={handleSelectImage}
+            selectedImage={selectedImage}
+          />
+        )}
+        {isError && (
+          <ErrorBlock
+            title="Failed to load images"
+            message="Please try again later"
+          />
+        )}
       </div>
 
       <p className="control">
@@ -43,7 +60,7 @@ export default function EventForm({ inputData, onSubmit, children }) {
         <textarea
           id="description"
           name="description"
-          defaultValue={inputData?.description ?? ''}
+          defaultValue={inputData?.description ?? ""}
         />
       </p>
 
@@ -54,7 +71,7 @@ export default function EventForm({ inputData, onSubmit, children }) {
             type="date"
             id="date"
             name="date"
-            defaultValue={inputData?.date ?? ''}
+            defaultValue={inputData?.date ?? ""}
           />
         </p>
 
@@ -64,7 +81,7 @@ export default function EventForm({ inputData, onSubmit, children }) {
             type="time"
             id="time"
             name="time"
-            defaultValue={inputData?.time ?? ''}
+            defaultValue={inputData?.time ?? ""}
           />
         </p>
       </div>
@@ -75,7 +92,7 @@ export default function EventForm({ inputData, onSubmit, children }) {
           type="text"
           id="location"
           name="location"
-          defaultValue={inputData?.location ?? ''}
+          defaultValue={inputData?.location ?? ""}
         />
       </p>
 
