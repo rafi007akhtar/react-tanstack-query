@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom";
 import { EventInfoWrapper } from "../../models/common.model";
+import { formatDate } from "../../util/date.utils";
 
 const EventItem: React.FC<EventInfoWrapper | any> = function ({ event }) {
-  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const formattedDate = formatDate(event.date);
   return (
     <article className="event-item">
       <img src={`http://localhost:3000/${event.image}`} alt={event.title} />
