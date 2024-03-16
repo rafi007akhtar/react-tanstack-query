@@ -36,8 +36,10 @@ export default function EventDetails() {
   });
 
   function handleDelete() {
-    setIsDeleting(false);
     deleteMutation.mutate(id);
+    if (deleteMutation.isSuccess) {
+      setIsDeleting(false);
+    }
   }
 
   let content;
@@ -77,14 +79,6 @@ export default function EventDetails() {
         </header>
 
         <div id="event-details-content">
-          {deleteMutation.isPending && <p>Hold on. Deleting this event ...</p>}
-          {deleteMutation.isError && (
-            <ErrorBlock
-              title="Deletion Failed"
-              message="Something went wrong with the deletion"
-            />
-          )}
-
           <img src={`http://localhost:3000/${data.image}`} alt={data.image} />
           <div id="event-details-info">
             <div>
@@ -107,16 +101,33 @@ export default function EventDetails() {
           <h2>Are you sure you want to delete this?</h2>
           <p>This is an irreversible process.</p>
           <div className="form-actions">
-            <button
-              onClick={() => setIsDeleting(false)}
-              className="button-text"
-            >
-              Cancel
-            </button>
-            <button onClick={() => handleDelete()} className="button">
-              Delete
-            </button>
+            {deleteMutation.isPending && (
+              <p>Hold on. Deleting this event ...</p>
+            )}
+            {!deleteMutation.isPending && (
+              <>
+                <button
+                  onClick={() => setIsDeleting(false)}
+                  className="button-text"
+                >
+                  Cancel
+                </button>
+                <button onClick={() => handleDelete()} className="button">
+                  Delete
+                </button>
+              </>
+            )}
           </div>
+
+          {deleteMutation.isError && (
+            <ErrorBlock
+              title="Deletion Failed"
+              message={
+                (deleteMutation.error as ResError)?.info?.message ||
+                "Something went wrong with the deletion"
+              }
+            />
+          )}
         </Modal>
       )}
 
