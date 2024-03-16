@@ -6,11 +6,12 @@ import EventItem from "./EventItem.jsx";
 import { ResError } from "src/models/common.model.js";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEvents } from "../../util/http.util.js";
+import { newEventsConstants } from "../../util/constants.util.js";
 
 export default function NewEventsSection() {
   let { data, isPending, isError, error } = useQuery({
-    queryKey: ["events"],
-    queryFn: () => fetchEvents(),
+    queryKey: ["events", { max: newEventsConstants.MAX_RECENT_EVENTS }],
+    queryFn: (opts) => fetchEvents(undefined, { queryOpts: opts.queryKey[1] }),
     // staleTime: 5000, // data will be considered state after fetching in this much time (ms)
     // gcTime: 1000, // fetched data will be cleared from the cache (garbage-collected) after this much time (ms)
   });
