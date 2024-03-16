@@ -3,9 +3,9 @@ const httpConstants = {
 };
 Object.freeze(httpConstants);
 
-const newEventsContstants = {
+const newEventsConstants = {
   MAX_RECENT_EVENTS: 3,
 };
-Object.freeze(newEventsContstants);
+Object.freeze(newEventsConstants);
 
-export { httpConstants, newEventsContstants };
+export { httpConstants, newEventsConstants };
