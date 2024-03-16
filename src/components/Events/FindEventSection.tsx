@@ -46,7 +46,7 @@ export default function FindEventSection() {
 
   if (data) {
     content = (
-      <ul>
+      <ul className="events-list">
         {data.map((event: EventInfo) => (
           <li key={event.id}>
             <EventItem event={event} />
