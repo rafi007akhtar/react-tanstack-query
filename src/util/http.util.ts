@@ -4,10 +4,12 @@ import httpConstants from "./constants.util";
 
 export const queryClient = new QueryClient();
 
+let eventsBaseURL = `${httpConstants.BASE_URL}/events`;
+
 export async function fetchEvents(searchTerm?: string, options?: any) {
   console.log({ searchTerm, options });
 
-  let url = `${httpConstants.BASE_URL}/events`;
+  let url = eventsBaseURL;
   if (searchTerm) {
     url = `${url}?search=${searchTerm}`;
   }
@@ -29,7 +31,7 @@ export async function fetchEvents(searchTerm?: string, options?: any) {
 }
 
 export async function fetchEvent(options: FetchEventOptions) {
-  const response = await fetch(`http://localhost:3000/events/${options.id}`, {
+  const response = await fetch(`${eventsBaseURL}/${options.id}`, {
     signal: options.signal,
   });
 
@@ -49,7 +51,7 @@ export async function fetchEvent(options: FetchEventOptions) {
 
 export async function createNewEvent(eventData: any) {
   console.log(eventData);
-  const response = await fetch(`http://localhost:3000/events`, {
+  const response = await fetch(eventsBaseURL, {
     method: "POST",
     body: JSON.stringify(eventData),
     headers: {
@@ -72,7 +74,7 @@ export async function createNewEvent(eventData: any) {
 }
 
 export async function deleteEvent(eventId: string | undefined) {
-  const response = await fetch(`http://localhost:3000/events/${eventId}`, {
+  const response = await fetch(`${eventsBaseURL}/${eventId}`, {
     method: "DELETE",
   });
 
@@ -91,7 +93,7 @@ export async function deleteEvent(eventId: string | undefined) {
 export async function fetchSelectableImages(params: {
   signal: AbortSignal | null | undefined;
 }) {
-  const response = await fetch(`http://localhost:3000/events/images`, {
+  const response = await fetch(`${eventsBaseURL}/images`, {
     signal: params.signal,
   });
 
