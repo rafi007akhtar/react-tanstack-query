@@ -6,10 +6,13 @@ import { deleteEvent, fetchEvent, queryClient } from "../../util/http.util.js";
 import ErrorBlock from "../UI/ErrorBlock.js";
 import { ResError } from "../../models/common.model.js";
 import { formatDate } from "../../util/date.utils.js";
+import { useState } from "react";
+import Modal from "../UI/Modal.js";
 
 export default function EventDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // load the event data and display below
   const { data, isPending, isError, error } = useQuery({
@@ -33,6 +36,7 @@ export default function EventDetails() {
   });
 
   function handleDelete() {
+    setIsDeleting(false);
     deleteMutation.mutate(id);
   }
 
@@ -67,7 +71,7 @@ export default function EventDetails() {
         <header>
           <h1>{data.title}</h1>
           <nav>
-            <button onClick={handleDelete}>Delete</button>
+            <button onClick={() => setIsDeleting(true)}>Delete</button>
             <Link to="edit">Edit</Link>
           </nav>
         </header>
@@ -98,6 +102,24 @@ export default function EventDetails() {
 
   return (
     <>
+      {isDeleting && (
+        <Modal onClose={() => setIsDeleting(false)}>
+          <h2>Are you sure you want to delete this?</h2>
+          <p>This is an irreversible process.</p>
+          <div className="form-actions">
+            <button
+              onClick={() => setIsDeleting(false)}
+              className="button-text"
+            >
+              Cancel
+            </button>
+            <button onClick={() => handleDelete()} className="button">
+              Delete
+            </button>
+          </div>
+        </Modal>
+      )}
+
       <Outlet />
       <Header>
         <Link to="/events" className="nav-item">
