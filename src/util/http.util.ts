@@ -1,5 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
-import { FetchEventOptions, ResError } from "../models/common.model";
+import {
+  FetchEventOptions,
+  ResError,
+  UpdateEventOptions,
+} from "../models/common.model";
 import httpConstants from "./constants.util";
 
 export const queryClient = new QueryClient();
@@ -109,4 +113,25 @@ export async function fetchSelectableImages(params: {
   const { images } = await response.json();
 
   return images;
+}
+
+export async function updateEvent(options: UpdateEventOptions) {
+  const response = await fetch(`http://localhost:3000/events/${options.id}`, {
+    method: "PUT",
+    body: JSON.stringify({ event: options.event }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while updating the event"
+    ) as ResError;
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  return response.json();
 }

@@ -31,3 +31,8 @@ export interface FetchEventOptions {
   id: string | undefined;
   signal: AbortSignal | null | undefined;
 }
+
+export interface UpdateEventOptions {
+  id: string | undefined;
+  event: Event | FormData;
+}
