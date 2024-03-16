@@ -31,15 +31,13 @@ export default function EventDetails() {
         // so that 404 error due to GET request for this event does not happen
         refetchType: "none",
       });
+      setIsDeleting(false);
       navigate("/events");
     },
   });
 
   function handleDelete() {
     deleteMutation.mutate(id);
-    if (deleteMutation.isSuccess) {
-      setIsDeleting(false);
-    }
   }
 
   let content;
