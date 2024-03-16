@@ -4,7 +4,7 @@ import {
   ResError,
   UpdateEventOptions,
 } from "../models/common.model";
-import httpConstants from "./constants.util";
+import { httpConstants } from "./constants.util";
 
 export const queryClient = new QueryClient();
 
@@ -13,8 +13,14 @@ let eventsBaseURL = `${httpConstants.BASE_URL}/events`;
 export async function fetchEvents(searchTerm?: string, options?: any) {
   console.log({ searchTerm, options });
 
+  const max = options?.queryOpts?.max;
+
   let url = eventsBaseURL;
-  if (searchTerm) {
+  if (max && searchTerm) {
+    url = `${url}?search=${searchTerm}&max=${max}`;
+  } else if (max) {
+    url = `${url}?max=${max}`;
+  } else if (searchTerm) {
     url = `${url}?search=${searchTerm}`;
   }
 
